@@ -1,0 +1,1 @@
+int download_url(char *url, char *user_agent, char *cookies, char **result);
