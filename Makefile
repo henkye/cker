@@ -8,7 +8,7 @@ PARTS=main.o download_url.o parse_arguments.o read_file.o parse_config.o search_
 build: cker
 
 install: build
-	mkdir $(PREFIX)/bin
+	mkdir $(DESTDIR)$(PREFIX)/bin
 	cp cker $(DESTDIR)$(PREFIX)/bin
 	
 uninstall:
