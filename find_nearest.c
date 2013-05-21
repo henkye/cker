@@ -1,3 +1,20 @@
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
 
 /* This function searches all strings in **what separated by ',' in *where.
  *  If none is found in *where, returns 1, leaving **what untouched.
@@ -69,9 +86,8 @@ int find_nearest(char *where, char **what)
 	
 
 	while( j < i ) {
-//		printf("pred vycistenim: %s\n", arraybaby[j]);
 		find_and_replace(&arraybaby[j], "\\,", ",");
-//		printf("po vycisteni: %s\n", arraybaby[j]);
+		
 		p_where = strstr(where, arraybaby[j]);
 		if( NULL != p_where ) {
 			temp_distance = p_where - where;
@@ -93,7 +109,6 @@ int find_nearest(char *where, char **what)
 	}
 
 	strcpy(*what, temp_nearest);
-	printf("Nearest found: %s\n\n", temp_nearest);
 	free(temp_nearest);
 		
 	return 0;

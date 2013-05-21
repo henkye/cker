@@ -1,3 +1,21 @@
+/*
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301, USA.
+ * 
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -15,7 +33,7 @@ int get_param(char *where, char *searchA, char *searchB,char **result)
 {
 	char *p_f_searchA = NULL;
 	char *p_f_searchB = NULL;
-	int string_lenght=0;
+	int string_lenght= 0;
 	
 	if(0 == strlen(searchA)) {
 //		printf("searchA is empty, aborting.\n");
@@ -30,7 +48,7 @@ int get_param(char *where, char *searchA, char *searchB,char **result)
 	p_f_searchA = strstr(where, searchA);
 	if (p_f_searchA == NULL)		// is it found?
 		{
-			printf("First searched not found, aborting.\n");
+			fprintf(stderr, "First searched not found, aborting.\n");
 			return 1;
 		}
 	
@@ -40,7 +58,6 @@ int get_param(char *where, char *searchA, char *searchB,char **result)
 	p_f_searchB = p_f_searchA;
 	p_f_searchB += strlen(searchA);		// we'll start search here
 	if(0 == strcmp(searchB, "\"")) {
-//		printf("searchB contains: \".\n");
 		while( NULL != (p_f_searchB = strstr(p_f_searchB,searchB))) {		// loop intil found
 			--p_f_searchB;		// we need to get before " to search for backslash
 			if( 0 != strncmp(p_f_searchB, "\\", 1)) {		//is there backlash
@@ -58,7 +75,7 @@ int get_param(char *where, char *searchA, char *searchB,char **result)
 	
 	if (p_f_searchB == NULL)		// is it found?
 		{
-			printf("Second searched not found, aborting.\n");
+			fprintf(stderr,"Second searched not found, aborting.\n");
 			return 1;
 		}
 	
