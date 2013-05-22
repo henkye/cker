@@ -113,7 +113,6 @@ int main(int argc, char *argv[])
 	
 	/* choose valid url identifier from config */
 	p_config_file = config_file;
-	if(verbosity == 1) printf("Searching for valid identifier in config...\n");		/* VERBOSITY */
 	
 	while( 0 == search_and_get(&p_config_file, "identifier=\"", "\"", &url_identifier)) { 	//scan all identifiers in config file
 		find_and_replace(&url_identifier, "\\\"", "\"");
@@ -146,10 +145,7 @@ int main(int argc, char *argv[])
 	/* get cookies from config */
 	p_config_file = config_file_chunk;
 
-	if( NULL != strstr(config_file_chunk, "cookie")) {
-		
-		if(verbosity == 1) printf("Getting cookies...\n");
-		
+	if( NULL != strstr(config_file_chunk, "cookie")) {		
 		cookies = malloc(1);		//we'll be realloc-ing
 		cookies[0] = '\0';		//we'll be strcat-ing
 		
@@ -163,7 +159,6 @@ int main(int argc, char *argv[])
 		}
 		
 	
-	
 	/* download url */
 	if(0 != download_url(url, user_agent, cookies, &html_data)) {
 		cleanup_func();
@@ -171,7 +166,10 @@ int main(int argc, char *argv[])
 	}
 	
 	/* d switch */
-	if( download == 1) {
+	if( download == 1 && verbosity == 1) {
+		printf("%s", html_data);
+	}
+	else if( download == 1) {
 		printf("%s", html_data);
 		cleanup_func();
 		return 0;
@@ -185,12 +183,8 @@ int main(int argc, char *argv[])
 	p_config_file = config_file_chunk;
 	p_html_data = html_data;
 	if( NULL != strstr(config_file_chunk, "jump")) {
-		if(verbosity == 1) printf("\nGetting jumps from config file...\n");		/* VERBOSITY */
-		
 		while( 0 == search_and_get(&p_config_file, "jump=\"","\"", &jump)) {		//read all jumps from config
-			find_and_replace(&jump, "\\\"", "\"");
-			if(verbosity == 1) printf("Found jump: \"%s\".\n", jump);		/* VERBOSITY */
-			
+			find_and_replace(&jump, "\\\"", "\"");			
 			p_html_data= strstr(p_html_data, jump);		//search jump in html data
 			if(p_html_data == NULL) {
 				p_html_data = html_data;
@@ -208,17 +202,14 @@ int main(int argc, char *argv[])
 	
 	
 	/* get get_a, get_b from config file */
-	if(verbosity == 1) printf("Starting to search for GETs in config file ...\n");		/* VERBOSITY */
 	p_config_file = config_file_chunk;		//reset position (order in config could be wrong)
 	if(NULL != strstr(p_config_file, "get_a=\"")) {
 		while(0 == search_and_get(&p_config_file, "get_a=\"", "\"", &search_a)) {
 			find_and_replace(&search_a, "\\\"", "\"");
-			if(verbosity == 1) printf("Found GET_A: \"%s\" in config file.\n", search_a);		/* VERBOSITY */
 			
 			if(NULL != strstr(p_config_file, "get_b=\"")) {
 				search_and_get(&p_config_file, "get_b=\"", "\"", &search_b);
 				find_and_replace(&search_b, "\\\"", "\"");
-				if(verbosity == 1) printf("Found GET_B: \"%s\" in config file.\n", search_b);	/* VERBOSITY */
 				
 				/* we need nearest occurence of search_b from search_a in html */
 				p_html_data_get = strstr(p_html_data, search_a);		//need new variable
@@ -237,6 +228,8 @@ int main(int argc, char *argv[])
 				if( 0 == get_param(p_html_data, search_a, search_b, &result_temp)) {
 					result = realloc(result, (strlen(result) + strlen(result_temp)) * sizeof(char) + 1);
 					strcat(result, result_temp);
+					if(verbosity == 1) printf("Succesfully got text: \"%s\"\ninbetween \"%s\", \"%s\"\n",
+					result_temp, search_a, search_b);		/* VERBOSITY */
 				}
 			}
 			else {
@@ -251,17 +244,16 @@ int main(int argc, char *argv[])
 	if(NULL != strstr(p_config_file, "search_a=\"")) {
 		while(0 == search_and_get(&p_config_file, "search_a=\"", "\"", &search_a)) {
 			find_and_replace(&search_a, "\\\"", "\"");
-			if(verbosity == 1) printf("Found SEARCH_A: \"%s\" in config file.\n", search_a);		/* VERBOSITY */
 			
 			if(NULL != strstr(p_config_file, "search_b=\"")) {
 				search_and_get(&p_config_file, "search_b=\"", "\"", &search_b);
 				find_and_replace(&search_b, "\\\"", "\"");
 				
-				if(verbosity == 1) printf("Found SEARCH_B: \"%s\" in config file.\n", search_b);		/* VERBOSITY */
-				
 				if( 0 == search_and_get(&p_html_data, search_a, search_b, &result_temp)) {
 					result = realloc(result, (strlen(result) + strlen(result_temp)) * sizeof(char) + 1);
 					strcat(result, result_temp);
+					if(verbosity == 1) printf("Succesfully got text: \"%s\"\ninbetween \"%s\", \"%s\"\n",
+					result_temp, search_a, search_b);		/* VERBOSITY */
 				}
 			}
 			else {
@@ -276,14 +268,14 @@ int main(int argc, char *argv[])
 	if(NULL != strstr(p_config_file, "find=\"")) {
 		while(0 == search_and_get(&p_config_file, "find=\"", "\"", &find)) {
 			find_and_replace(&find, "\\\"", "\"");
-			if(verbosity == 1) printf("Found FIND: \"%s\" in config file.\n", find);		/* VERBOSITY */
 			
 			if(NULL != strstr(p_config_file, "replace=\"")) {
 				search_and_get(&p_config_file, "replace=\"", "\"", &replace);
 				find_and_replace(&replace, "\\\"", "\"");
-				if(verbosity == 1) printf("Found REPLACE: \"%s\" in config file.\n", replace);		/* VERBOSITY */
 				
-				find_and_replace(&result, find, replace);
+				if( 0 == find_and_replace(&result, find, replace)) {
+					if(verbosity == 1) printf("Succesfully replaced all \"%s\" by \"%s\".", find, replace);		/* VERBOSITY */
+				}
 			}
 			else {
 				break;
@@ -300,7 +292,6 @@ int main(int argc, char *argv[])
 			cleanup_func();
 			return 1;
 		}
-		if(verbosity == 1) printf("Found PREPPEND: \"%s\" in config file.\n", preppend);		/* VERBOSITY */
 	}
 	
 	p_config_file = config_file_chunk;		//reset position (order in config could be wrong)
@@ -310,25 +301,27 @@ int main(int argc, char *argv[])
 			cleanup_func();
 			return 1;
 		}
-		if(verbosity == 1) printf("Found APPEND: \"%s\" in config file.\n", append);		/* VERBOSITY */
 	}
 	
 	/* geting both preppend and append */
 	if( preppend != NULL && append != NULL ) {
 		result_with_append_preppend = malloc(1 +(strlen(result) + strlen(append) + strlen(preppend)) * sizeof(char));
 		sprintf(result_with_append_preppend, "%s%s%s", preppend, result, append);
+		if(verbosity == 1) printf("Succesfully added \"%s\" and \"%s\" to result.\n", preppend, append);		/* VERBOSITY */
 	}
 	
 	/* or only preppend */
 	else if( preppend != NULL) {
 		result_with_append_preppend = malloc(1 +(strlen(result) + strlen(preppend)) * sizeof(char));
 		sprintf(result_with_append_preppend, "%s%s", preppend, result);
+		if(verbosity == 1) printf("Succesfully added \"%s\" to result.\n", preppend);		/* VERBOSITY */
 	}
 	
 	/* or only append */
 	else if( append != NULL) {
 		result_with_append_preppend = malloc(1 +(strlen(result) + strlen(append)) * sizeof(char));
 		sprintf(result_with_append_preppend, "%s%s", result, append);
+		if(verbosity == 1) printf("Succesfully added \"%s\" to result.\n", append);		/* VERBOSITY */
 	}
 	
 	/* no append and preppend? */
