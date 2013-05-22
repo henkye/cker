@@ -262,6 +262,13 @@ int main(int argc, char *argv[])
 		}
 	}
 	
+	/* since none of 2 previous functions are requierd, it could happen none will execute */
+	if( 0 == strlen(result)) {
+		fprintf(stderr, "The result is empty, aborting.\n");
+		cleanup_func();
+		return 1;
+	}
+	
 
 	/* filter result */
 	p_config_file = config_file_chunk;		//reset position (order in config could be wrong)
