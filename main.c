@@ -228,7 +228,7 @@ int main(int argc, char *argv[])
 				if( 0 == get_param(p_html_data, search_a, search_b, &result_temp)) {
 					result = realloc(result, (strlen(result) + strlen(result_temp)) * sizeof(char) + 1);
 					strcat(result, result_temp);
-					if(verbosity == 1) printf("Succesfully got text: \"%s\"\ninbetween \"%s\", \"%s\"\n",
+					if(verbosity == 1) printf("Succesfully got text: \"%s\"\ninbetween \"%s\", \"%s\".\n\n",
 					result_temp, search_a, search_b);		/* VERBOSITY */
 				}
 			}
@@ -252,7 +252,7 @@ int main(int argc, char *argv[])
 				if( 0 == search_and_get(&p_html_data, search_a, search_b, &result_temp)) {
 					result = realloc(result, (strlen(result) + strlen(result_temp)) * sizeof(char) + 1);
 					strcat(result, result_temp);
-					if(verbosity == 1) printf("Succesfully got text: \"%s\"\ninbetween \"%s\", \"%s\"\n",
+					if(verbosity == 1) printf("Succesfully got text: \"%s\"\ninbetween \"%s\", \"%s\".\n\n",
 					result_temp, search_a, search_b);		/* VERBOSITY */
 				}
 			}
@@ -281,7 +281,7 @@ int main(int argc, char *argv[])
 				find_and_replace(&replace, "\\\"", "\"");
 				
 				if( 0 == find_and_replace(&result, find, replace)) {
-					if(verbosity == 1) printf("Succesfully replaced all \"%s\" by \"%s\".", find, replace);		/* VERBOSITY */
+					if(verbosity == 1) printf("Succesfully replaced all \"%s\" by \"%s\".\n", find, replace);		/* VERBOSITY */
 				}
 			}
 			else {
