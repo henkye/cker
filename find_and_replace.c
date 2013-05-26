@@ -20,7 +20,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-int find_and_replace(char **input, char *find, char *replace)
+int find_and_replace(char **input, const char *find, const char *replace)
 {
 	char *input_temp;
 	char *p_input = *input;

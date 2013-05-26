@@ -16,4 +16,4 @@
  * 
  */
 
-int get_param(char *where, char *searchA, char *searchB,char **result);
+int get_param(const char *where, const char *searchA, const char *searchB,char **result);

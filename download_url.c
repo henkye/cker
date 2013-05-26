@@ -47,7 +47,7 @@ curl_data_colector(char *curl_data, size_t size, size_t nmemb, d_html_data *stru
 }
  
  
-int download_url(char *url, char *user_agent, char *cookies, char **result)
+int download_url(const char *url, const char *user_agent, const char *cookies, char **result)
 {
 	CURL *curl_handle;
 	CURLcode res;

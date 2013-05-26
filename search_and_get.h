@@ -16,4 +16,4 @@
  * 
  */
 
-int search_and_get(char **where, char *searchA, char *searchB,char **result);
+int search_and_get(char **where, const char *searchA, const char *searchB,char **result);

@@ -28,7 +28,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-int find_nearest(char *where, char **what)
+int find_nearest(const char *where, char **what)
 {
 	char *p_what = *what;
 	char *p_what_start = *what;

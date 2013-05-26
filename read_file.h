@@ -16,4 +16,4 @@
  * 
  */
 
-int read_file(char *file_to_read, char **output);
+int read_file(const char *file_to_read, char **output);

@@ -28,7 +28,7 @@
  * Remember, <where> and <result> needs to be ?pointer address?, ie: "&where".
  */
 
-int get_param(char *where, char *searchA, char *searchB,char **result)
+int get_param(const char *where, const char *searchA, const char *searchB,char **result)
 
 {
 	char *p_f_searchA = NULL;

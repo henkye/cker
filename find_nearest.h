@@ -16,4 +16,4 @@
  * 
  */
 
-int find_nearest(char *where, char **what);
+int find_nearest(const char *where, char **what);

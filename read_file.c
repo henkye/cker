@@ -20,7 +20,7 @@
 #include <sys/stat.h>
 #include <stdlib.h>
 
-int read_file(char *file_to_read, char **output)
+int read_file(const char *file_to_read, char **output)
 {
 	FILE *FILE_TO_READ;
 	struct stat fileinfo;
