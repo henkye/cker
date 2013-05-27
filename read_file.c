@@ -26,13 +26,13 @@ int read_file(const char *file_to_read, char **output)
 	struct stat fileinfo;
 	
 	if( 0 != stat(file_to_read, &fileinfo)) {
-		fprintf(stderr, "Cannot get file: %s informations.\n", file_to_read);
+//		fprintf(stderr, "Cannot get file: %s informations.\n", file_to_read);
 		return 1;
 	}
 	
 	FILE_TO_READ = fopen(file_to_read, "r");
 	if( FILE_TO_READ == NULL) {
-		fprintf(stderr, "Cannot open file: %s.\n", file_to_read);
+//		fprintf(stderr, "Cannot open file: %s.\n", file_to_read);
 		return 1;
 	}
 	
@@ -40,7 +40,7 @@ int read_file(const char *file_to_read, char **output)
 	*output = malloc(fileinfo.st_size + 1);
 
 	if( fileinfo.st_size != fread(*output, 1, fileinfo.st_size, FILE_TO_READ)) {
-		fprintf(stderr, "Failed to read file.\n");
+//		fprintf(stderr, "Failed to read file.\n");
 	}
 
 	(*output)[fileinfo.st_size] = '\0';
