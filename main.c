@@ -30,6 +30,7 @@
 #include "find_nearest.h"
 
 
+char *config_file_path = NULL;
 char *html_data = NULL;
 char *url = NULL;
 char *config_file = NULL;
@@ -52,6 +53,7 @@ char *result_temp = NULL;
 
 void cleanup_func()
 {
+	if(config_file_path != NULL) free(config_file_path);
 	if(html_data != NULL) free(html_data);
 	if(url != NULL) free(url);
 	if(config_file != NULL) free(config_file);
@@ -78,8 +80,9 @@ int main(int argc, char *argv[])
 	int verbosity =0;
 	int download =0;
 	int execute_allow = 0;
-	char *user_agent="Mozilla/5.0 (X11; Linux i686; rv:19.0) Gecko/20100101 Firefox/19.0";
-	char *config_file_path = "/home/henk/prace/search_funkce/clean/definitions.txt";
+	const char *config_file_path_home = "/.config/cker.def";
+	const char *config_file_path_etc = "/etc/cker.def";
+	const char *user_agent="Mozilla/5.0 (X11; Linux i686; rv:19.0) Gecko/20100101 Firefox/19.0";
 	char *p_config_file;
 	char *p_html_data;
 	char *p_html_data_get;
@@ -99,16 +102,29 @@ int main(int argc, char *argv[])
 	
 	
 	/* config file */
+	config_file_path = malloc((strlen(config_file_path_home) + strlen(getenv("HOME")) +1) * sizeof(char));
+	strcpy(config_file_path, getenv("HOME"));
+	strcat(config_file_path, config_file_path_home);
+
 	if(0 != read_file(config_file_path, &config_file)) {
-		cleanup_func();
-		return 1;
+		if(0 != read_file(config_file_path_etc, &config_file)) {
+			fprintf(stderr, "Files:\n  %s\n  %s\nnot found, aborting.\n", config_file_path, config_file_path_etc);
+			cleanup_func();
+			return 1;
+		}
+		else {
+			if(verbosity == 1) printf("Using config file: \"%s\".\n", config_file_path_etc);		/* VERBOSITY */
+		}
+	}
+	else {
+		if(verbosity == 1) printf("Using config file: \"%s\".\n", config_file_path);		/* VERBOSITY */
 	}
 	
 	if(0 != parse_config(&config_file)) {
 		cleanup_func();
 		return 1;
 	}
-	if(verbosity == 1) printf("Using config file: \"%s\".\n", config_file_path);		/* VERBOSITY */
+	
 	
 	
 	/* choose valid url identifier from config */
