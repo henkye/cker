@@ -1,0 +1,107 @@
+.TH CKER 1 "JULLY 2013" GNU/Linux "User Manuals"
+.SH NAME
+cker \- Command line utility for extracting text data from given webpage.
+
+.SH SYNOPSIS
+.B cker [-u \(dq
+.I URL
+.B \(dq]
+.B [-x]
+.B [-d]
+.B [-v]
+.B [-h]
+
+.SH OPTIONS
+.IP "-u, --url \(dq[URL]\(dq"
+url to download
+.IP "-x, --execute"
+execute specified program upon completition
+.IP "-d, --download"
+only download and print output to stdout
+.IP "-v, --verbose"
+be verbose for some additional info
+.IP "-h, --help"
+show help
+
+.SH DESCRIPTION
+First,
+.B cker
+downloads given URL into RAM using cookies from
+.B COOKIE
+parameters (if any) from
+.I cker.def
+
+Then finds appropriate section in
+.I cker.def
+by comparing URL with
+.B IDENTIFIER
+
+Search all
+.B JUMP
+(if any) and rewind onto their position in HTML source (if found).
+
+Gets all text inbetween
+.B SEARCH_A
+,
+.B SEARCH_B
+(if any)
+.I not including
+.B SEARCH_A
+,
+.B SEARCH_B
+in resulting string. Multiple occurences are appended to result. This function
+.I rewinds
+after
+.B SEARCH_B
+in HTML source.
+
+Gets all text inbetween
+.B GET_A
+,
+.B GET_B
+(if any)
+.I including
+.B GET_A
+in resulting string. Multiple occurences are appended to result. This function
+.I does not rewind
+in HTML source at all. Also,
+.B GET_B
+can contain multiple keywords separated by
+.B ,
+In this case, only the string nearest to
+.B GET_A
+is used.
+
+Replaces all
+.B FIND
+by
+.B REPLACE
+(if any) in result.
+
+Preppends or appends
+.B APPEND
+,
+.B PREPPEND
+(if any) to resulting string.
+
+Finally, according to pressence of
+.I -x
+switch and
+.B EXECUTE
+section, program either prints result to STDOUT or execute custom application with result as a parameter.
+
+Returns 0 on succes, 1 on failure.
+
+.SH FILES
+.I /etc/cker.def
+.RS
+System wide definitions file. Fallback one.
+.RE
+
+.I ~/.config/cker.def
+.RS
+Per user definitions file. Used first.
+.RE
+
+.SH AUTHOR
+Tomáš Henzl thenzl@seznam.cz
